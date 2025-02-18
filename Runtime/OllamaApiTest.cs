@@ -6,6 +6,7 @@ public class OllamaApiTest : MonoBehaviour
 {
     [SerializeField] private NeocortexChatPanel chatPanel;
     [SerializeField] private NeocortexTextChatInput chatInput;
+    [SerializeField] private OllamaModelDropdown modelDropdown;
 
     private OllamaRequest request;
     
@@ -13,7 +14,14 @@ public class OllamaApiTest : MonoBehaviour
     {
         request = new OllamaRequest();
         request.OnChatResponseReceived += OnChatResponseReceived;
+        request.ModelName = modelDropdown.options[0].text;
         chatInput.OnSendButtonClicked.AddListener(OnUserMessageSent);
+        modelDropdown.onValueChanged.AddListener(OnDropdownValueChanged);
+    }
+
+    private void OnDropdownValueChanged(int index)
+    {
+        request.ModelName = modelDropdown.options[index].text;
     }
 
     private void OnChatResponseReceived(ChatResponse response)

@@ -8,13 +8,19 @@ using System.Collections.Generic;
 public class OllamaRequest : WebRequest
 {
     private const string BASE_URL = "http://localhost:11434/api/chat";
+
+    private readonly List<Message> messages = new ();
     
+    public string ModelName { get; set; }
     public event Action<ChatResponse> OnChatResponseReceived;
-    
-    private readonly List<Message> messages = new List<Message>();
-    
+
     public async void Send(string input)
     {
+        if (string.IsNullOrEmpty(ModelName))
+        {
+            throw new Exception("ModelName property is not set.");
+        }
+        
         Headers = new Dictionary<string, string>()
         {
             { "Content-Type", "application/json" },
@@ -24,7 +30,7 @@ public class OllamaRequest : WebRequest
         
         var data = new
         {
-            model = "llama3.2:3b",
+            model = ModelName,
             messages = messages.ToArray(),
             stream = false
         };
