@@ -18,6 +18,15 @@ public class OllamaRequest : WebRequest
     
     public event Action<ChatResponse> OnChatResponseReceived;
 
+    public void AddSystemMessage(string prompt)
+    {
+        messages.Add(new Message()
+        {
+            role = "system",
+            content = prompt
+        });
+    }
+
     public async void Send(string input)
     {
         if (string.IsNullOrEmpty(ModelName))
