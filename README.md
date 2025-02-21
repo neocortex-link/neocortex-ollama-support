@@ -6,7 +6,7 @@ Register and create a Neocortex account here: https://neocortex.link/register
 You can find more about the Unity SDK integration here in our documentatons: https://neocortex.link/docs/integrations/unity/quick-start
 
 ## Requirements
-- Neocortex Unity SDK [Download Here](https://neocortex.link/register)
+- Neocortex Unity SDK [Download Here](https://github.com/neocortex-link/neocortex-unity-sdk)
 - Unity 2021.3 or above [Download Here](https://unity3d.com/get-unity/download)
 - Git version control system [Download Here](https://git-scm.com/download)
 
