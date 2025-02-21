@@ -2,7 +2,8 @@
     "name": "Neocortex.Ollama.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:d1f1a193cf9c44f48b7d2f707f514d3c"
+        "GUID:d1f1a193cf9c44f48b7d2f707f514d3c",
+        "GUID:9cf82f3f0c8879a4581b529b73d0758b"
     ],
     "includePlatforms": [
         "Editor"
