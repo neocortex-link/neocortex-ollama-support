@@ -1,0 +1,38 @@
+{
+  "name": "link.neocortex.ollama",
+  "version": "0.1.0",
+  "displayName": "Neocortex Unity SDK Ollama Support",
+  "description": "Ollama Support for Neocortex Unity SDk for helping developers run LLMs on their local environment.",
+  "unity": "2021.3",
+  "unityRelease": "35f1",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  },
+  "keywords": [
+    "ollama",
+    "llm",
+    "llms",
+    "conversational ai",
+    "smart npc",
+    "npcs",
+    "character",
+    "character ai",
+    "game ai",
+    "smart agent",
+    "game agent",
+    "agentic ai",
+    "agentic npc"
+  ],
+  "author": {
+    "name": "Neocortex",
+    "email": "contact@neocortex.link",
+    "url": "https://neocortex.link"
+  },
+  "samples": [
+    {
+      "displayName": "Chat Sample",
+      "description": "Quick start for testing LLMs downloaded via Ollama with Neocortex Unity SDK",
+      "path": "Samples~/Chat Sample"
+    }
+  ]
+}

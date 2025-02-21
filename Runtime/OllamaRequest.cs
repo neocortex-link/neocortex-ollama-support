@@ -8,130 +8,135 @@ using System.Threading.Tasks;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 
-public class OllamaRequest : WebRequest
+namespace Neocortex
 {
-    private const string BASE_URL = "http://localhost:11434/api";
-
-    private readonly List<Message> messages = new ();
-    
-    public string ModelName { get; set; }
-    
-    public event Action<ChatResponse> OnChatResponseReceived;
-
-    public void AddSystemMessage(string prompt)
+    public class OllamaRequest : WebRequest
     {
-        messages.Add(new Message()
-        {
-            role = "system",
-            content = prompt
-        });
-    }
+        private const string BASE_URL = "http://localhost:11434/api";
 
-    public async void Send(string input)
-    {
-        if (string.IsNullOrEmpty(ModelName))
+        private readonly List<Message> messages = new();
+
+        public string ModelName { get; set; }
+
+        public event Action<ChatResponse> OnChatResponseReceived;
+
+        public void AddSystemMessage(string prompt)
         {
-            throw new Exception("ModelName property is not set.");
+            messages.Add(new Message()
+            {
+                role = "system",
+                content = prompt
+            });
         }
-        
-        Headers = new Dictionary<string, string>()
-        {
-            { "Content-Type", "application/json" },
-        };
-        
-        messages.Add(new Message() { content = input, role = "user" });
-        
-        var data = new
-        {
-            model = ModelName,
-            messages = messages.ToArray(),
-            stream = false
-        };
-        
-        ApiPayload payload = new ApiPayload()
-        {
-            url = $"{ BASE_URL }/chat",
-            data = GetBytes(data)
-        };
-        
-        UnityWebRequest request = await Send(payload);
-        OllamaResponse response = JsonConvert.DeserializeObject<OllamaResponse>(request.downloadHandler.text, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Ignore
-        });
-        
-        messages.Add(new Message() { content = response.message.content, role = "assistant" });
-        OnChatResponseReceived?.Invoke(new ChatResponse()
-        {
-            message = response.message.content,
-        });
-    }
 
-    public async Task<List<string>> GetTags()
-    {
-        Headers = new Dictionary<string, string>()
+        public async void Send(string input)
         {
-            { "Content-Type", "application/json" },
-        };
-        
-        ApiPayload payload = new ApiPayload()
-        {
-            url = $"{ BASE_URL }/tags",
-            method = "GET"
-        };
-        
-        UnityWebRequest request = await Send(payload);
-        
-        Models models = JsonConvert.DeserializeObject<Models>(request.downloadHandler.text, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Ignore
-        });
+            if (string.IsNullOrEmpty(ModelName))
+            {
+                throw new Exception("ModelName property is not set.");
+            }
 
-        return models.models.Select(m => m.name).ToList();
-    }
+            Headers = new Dictionary<string, string>()
+            {
+                { "Content-Type", "application/json" },
+            };
 
-    public async Task PullModel(string modelName)
-    {
-        Headers = new Dictionary<string, string>()
+            messages.Add(new Message() { content = input, role = "user" });
+
+            var data = new
+            {
+                model = ModelName,
+                messages = messages.ToArray(),
+                stream = false
+            };
+
+            ApiPayload payload = new ApiPayload()
+            {
+                url = $"{BASE_URL}/chat",
+                data = GetBytes(data)
+            };
+
+            UnityWebRequest request = await Send(payload);
+            OllamaResponse response = JsonConvert.DeserializeObject<OllamaResponse>(request.downloadHandler.text,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+            messages.Add(new Message() { content = response.message.content, role = "assistant" });
+            OnChatResponseReceived?.Invoke(new ChatResponse()
+            {
+                message = response.message.content,
+            });
+        }
+
+        public async Task<List<string>> GetTags()
         {
-            { "Content-Type", "application/json" },
-        };
-        
-        var data = new
+            Headers = new Dictionary<string, string>()
+            {
+                { "Content-Type", "application/json" },
+            };
+
+            ApiPayload payload = new ApiPayload()
+            {
+                url = $"{BASE_URL}/tags",
+                method = "GET"
+            };
+
+            UnityWebRequest request = await Send(payload);
+
+            Models models = JsonConvert.DeserializeObject<Models>(request.downloadHandler.text,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+            return models.models.Select(m => m.name).ToList();
+        }
+
+        public async Task PullModel(string modelName)
         {
-            model = modelName,
-            stream = true
-        };
-        
-        ApiPayload payload = new ApiPayload()
+            Headers = new Dictionary<string, string>()
+            {
+                { "Content-Type", "application/json" },
+            };
+
+            var data = new
+            {
+                model = modelName,
+                stream = true
+            };
+
+            ApiPayload payload = new ApiPayload()
+            {
+                url = $"{BASE_URL}/pull",
+                method = "POST",
+                data = GetBytes(data)
+            };
+
+            await Send(payload);
+        }
+
+        public async Task DeleteModel(string modelName)
         {
-            url = $"{ BASE_URL }/pull",
-            method = "POST",
-            data = GetBytes(data)
-        };
-        
-        await Send(payload);
-    }
-    
-    public async Task DeleteModel(string modelName)
-    {
-        Headers = new Dictionary<string, string>()
-        {
-            { "Content-Type", "application/json" },
-        };
-        
-        var data = new
-        {
-            model = modelName
-        };
-        
-        ApiPayload payload = new ApiPayload()
-        {
-            url = $"{ BASE_URL }/delete",
-            method = "DELETE",
-            data = GetBytes(data)
-        };
-        
-        await Send(payload);
+            Headers = new Dictionary<string, string>()
+            {
+                { "Content-Type", "application/json" },
+            };
+
+            var data = new
+            {
+                model = modelName
+            };
+
+            ApiPayload payload = new ApiPayload()
+            {
+                url = $"{BASE_URL}/delete",
+                method = "DELETE",
+                data = GetBytes(data)
+            };
+
+            await Send(payload);
+        }
     }
 }
