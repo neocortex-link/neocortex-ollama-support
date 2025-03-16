@@ -11,15 +11,17 @@ namespace Neocortex
         private Texture2D logo;
 
         private int selectedModelIndex;
-
         private bool isDownloading;
+
+        private const string NeocortexUrl = "https://neocortex.link";
+        private const string NeocortexSignUpUrl = "https://neocortex.link/register";
 
         [MenuItem("Tools/Neocortex/Ollama Support")]
         public static void ShowWindow()
         {
             var window = GetWindow<OllamaSupportWindow>(false, "Neocortex Ollama Support", true);
-            window.minSize = new Vector2(512, 352);
-            window.maxSize = new Vector2(512, 352);
+            window.minSize = new Vector2(512, 400);  // Adjusted height for extra button
+            window.maxSize = new Vector2(512, 400);
         }
 
         private void OnEnable()
@@ -31,14 +33,19 @@ namespace Neocortex
             ollama.SetPlatformDependedStrings();
         }
 
-        private async void OnGUI()
+        private void OnGUI()
         {
             if (logo)
             {
                 float x = (position.width - 512) / 2;
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(x);
-                GUILayout.Label(logo, GUILayout.Width(512), GUILayout.Height(132));
+
+                if (GUILayout.Button(logo, GUIStyle.none, GUILayout.Width(512), GUILayout.Height(132)))
+                {
+                    Application.OpenURL(NeocortexUrl);
+                }
+
                 GUILayout.Space(x);
                 GUILayout.EndHorizontal();
             }
@@ -48,6 +55,13 @@ namespace Neocortex
             }
 
             EditorGUILayout.BeginVertical("Box");
+            
+            if (GUILayout.Button("Sign Up for Neocortex", GUILayout.Height(30)))
+            {
+                Application.OpenURL(NeocortexSignUpUrl);
+            }
+            
+            GUILayout.Space(10);
 
             EditorGUILayout.HelpBox(
                 "This window provides support for Ollama.\nClick the button below to download the necessary tools.",
@@ -62,14 +76,13 @@ namespace Neocortex
             {
                 Application.OpenURL(ollama.DownloadUrl);
             }
-
             GUI.enabled = true;
 
             GUILayout.Space(10);
 
             EditorGUILayout.HelpBox(
                 "At least 8 GB RAM is needed for 7B models, 16 GB for 13B models, and 32 GB for 33B models." +
-                $"\nCurrent Device: VRAM: {SystemInfo.graphicsMemorySize / 1024f:F1} GB, RAM:  {SystemInfo.systemMemorySize / 1024f:F1} GB",
+                $"\nCurrent Device: VRAM: {SystemInfo.graphicsMemorySize / 1024f:F1} GB, RAM: {SystemInfo.systemMemorySize / 1024f:F1} GB",
                 MessageType.Warning);
 
             GUI.enabled = ollama.IsOllamaInstalled;
@@ -107,7 +120,6 @@ namespace Neocortex
             }
 
             GUI.enabled = true;
-
             EditorGUILayout.EndVertical();
         }
 
