@@ -26,11 +26,20 @@ namespace Neocortex
             new() { model = "Llama 3.2", parameters = "3B", size = "2.0GB", name = "llama3.2:3b" },
             new() { model = "Llama 3.1", parameters = "8B", size = "4.7GB", name = "llama3.1" },
 
-            new() { model = "Gemma 2", parameters = "2B", size = "1.6GB", name = "gemma2:2b" },
+            new() { model = "Gemma 3", parameters = "1B", size = "815MB", name = "gemma3:1b" },
+            new() { model = "Gemma 3", parameters = "4B", size = "3.3GB", name = "gemma3:4b" },
+            new() { model = "Gemma 3", parameters = "12B", size = "8.1GB", name = "gemma3:12b" },
+            new() { model = "Gemma 3", parameters = "27B", size = "17GB", name = "gemma3:27b" },
             new() { model = "Gemma 2", parameters = "9B", size = "5.5GB", name = "gemma2" },
             new() { model = "Gemma 2", parameters = "27B", size = "16GB", name = "gemma2:27b" },
 
             new() { model = "Mistral", parameters = "7B", size = "4.1GB", name = "mistral" },
+            
+            new() { model = "Qwen 2.5", parameters = "0.5B", size = "398MB", name = "qwen2.5:0.5b" },
+            new() { model = "Qwen 2.5", parameters = "1.5B", size = "986MB", name = "qwen2.5:1.5b" },
+            new() { model = "Qwen 2.5", parameters = "3B", size = "1.9GB", name = "qwen2.5:3b" },
+            new() { model = "Qwen 2.5", parameters = "7B", size = "4.7GB", name = "qwen2.5:7b" },
+            new() { model = "Qwen 2.5", parameters = "14B", size = "9GB", name = "qwen2.5:14b" },
         };
 
         public float ProgressValue => request.Progress;
