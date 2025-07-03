@@ -1,6 +1,6 @@
 {
   "name": "link.neocortex.ollama",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "displayName": "Neocortex Ollama Support",
   "description": "Ollama Support for Neocortex Unity SDK. This package helps you download and run LLMs on your local environment with the help of Ollama.",
   "unity": "2021.3",

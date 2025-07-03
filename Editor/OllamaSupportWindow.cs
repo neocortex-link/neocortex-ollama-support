@@ -29,8 +29,14 @@ namespace Neocortex
             ollama = new OllamaSupport();
             logo = Resources.Load<Texture2D>("Visuals/ollama_x_neocortex");
             ollama.CheckOllamaInstallation();
+            ollama.CheckOllamaRunning();
             ollama.CheckInstalledModels();
             ollama.SetPlatformDependedStrings();
+
+            if (!ollama.IsOllamaRunning)
+            {
+                EditorUtility.DisplayDialog("Ollama Not Running", "Ollama is not running. Please start Ollama and try again.", "OK");
+            }
         }
 
         private void OnGUI()

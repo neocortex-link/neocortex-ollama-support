@@ -3,6 +3,8 @@ using System.Text;
 using Neocortex.Data;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using SystemInfo = UnityEngine.Device.SystemInfo;
 
 namespace Neocortex
@@ -10,6 +12,7 @@ namespace Neocortex
     public class OllamaSupport
     {
         public bool IsOllamaInstalled { get; private set; }
+        public bool IsOllamaRunning { get; private set; }
 
         public List<ModelInfo> Models = new()
         {
@@ -69,22 +72,41 @@ namespace Neocortex
 
             return new Process { StartInfo = psi };
         }
+        
+        private bool IsWindows()
+        {
+            return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        }
 
         public void CheckOllamaInstallation()
         {
-            using (Process process = CreateProcess("cmd.exe", "where ollama"))
+            using (Process process = CreateProcess(IsWindows() ? "where" : "which", "ollama"))
             {
                 process.Start();
                 string output = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
+                IsOllamaInstalled = !string.IsNullOrWhiteSpace(output);
+            }
+        }
 
-                IsOllamaInstalled = !string.IsNullOrEmpty(output);
+        public void CheckOllamaRunning()
+        {
+            try
+            {
+                using (var client = new TcpClient("localhost", 11434))
+                {
+                    IsOllamaRunning = true;
+                }
+            }
+            catch
+            {
+                IsOllamaRunning = false;
             }
         }
 
         public async void CheckInstalledModels()
         {
-            if (IsOllamaInstalled)
+            if (IsOllamaInstalled && IsOllamaRunning)
             {
                 var tags = await request.GetTags();
 
