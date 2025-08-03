@@ -1,5 +1,4 @@
 using System;
-using Neocortex;
 using System.Linq;
 using Neocortex.API;
 using Neocortex.Data;
@@ -80,7 +79,8 @@ namespace Neocortex
             ApiPayload payload = new ApiPayload()
             {
                 url = $"{BASE_URL}/tags",
-                method = "GET"
+                method = "GET",
+                data = Array.Empty<byte>()
             };
 
             UnityWebRequest request = await Send(payload);
